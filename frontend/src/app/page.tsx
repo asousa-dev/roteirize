@@ -5,10 +5,13 @@ type HealthResponse = {
   message: string;
 };
 
+const apiUrl = 
+  process.env.API_URL ?? "http://localhost:8080";
+
 async function getApiHealth(): Promise<HealthResponse | null> {
   try {
     const response = await fetch(
-      "http://localhost:8080/api/v1/health",
+      `${apiUrl}/api/v1/health`,
       {
         cache: "no-store",
       }
