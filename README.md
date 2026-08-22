@@ -76,8 +76,6 @@ roteirize/
 └── README.md
 ~~~
 
-Neste primeiro commit, somente a documentação estará presente. As pastas de código serão criadas quando a implementação começar.
-
 ## Forma de desenvolvimento
 
 O projeto será desenvolvido incrementalmente:
