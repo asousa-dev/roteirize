@@ -91,4 +91,4 @@ O projeto será desenvolvido incrementalmente:
 
 ## Licença
 
-A licença ainda será definida antes de qualquer publicação ou recebimento de contribuições externas.
+MIT License.
