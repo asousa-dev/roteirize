@@ -1,5 +1,7 @@
 package dev.asousa.roteirize.trip;
 
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,5 +23,10 @@ public class TripController {
         TripResponse response = tripService.create(request);
 
         return ResponseEntity .status(HttpStatus.CREATED) .body(response);
+    }
+
+    @GetMapping
+    public List<TripResponse> findAll(){
+        return tripService.findAll();
     }
 }
