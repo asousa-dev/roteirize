@@ -1,5 +1,6 @@
 package dev.asousa.roteirize.trip;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,5 +17,9 @@ public class TripService {
         trips.put(id, trip);
 
         return TripResponse.from(trip);
+    }
+
+    public List<TripResponse> findAll(){
+        return trips .values() .stream() .map(TripResponse::from) .toList();
     }
 }
