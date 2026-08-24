@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/trips")
@@ -19,10 +20,14 @@ public class TripController {
     }
 
     @PostMapping
-    public ResponseEntity<TripResponse> create( @RequestBody CreateTripRequest request) {
+    public ResponseEntity<TripResponse> create(
+        @Valid @RequestBody CreateTripRequest request
+    ) {
         TripResponse response = tripService.create(request);
 
-        return ResponseEntity .status(HttpStatus.CREATED) .body(response);
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(response);
     }
 
     @GetMapping
