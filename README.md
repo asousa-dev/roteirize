@@ -2,10 +2,6 @@
 
 > Construtor inteligente de roteiros de viagem que organiza atrações em uma agenda diária possível, eficiente e explicável.
 
-## Status
-
-O projeto está em fase de planejamento e documentação. A primeira versão será executada localmente e terá foco em viagens turísticas dentro de uma única cidade.
-
 ## Problema
 
 Planejar uma viagem exige combinar atrações, horários de funcionamento, reservas, distâncias, tempo de visita e ritmo dos viajantes. Quando essas informações ficam separadas, o resultado costuma ter deslocamentos desnecessários, conflitos de horário e atividades que não cabem nos dias disponíveis.
@@ -44,8 +40,6 @@ O resultado será apresentado em uma linha do tempo integrada a um mapa. Altera�
 - Banco de dados: PostgreSQL.
 - Ambiente local: Docker Compose.
 - Mapas e rotas: integração protegida por adaptadores.
-
-As versões exatas serão definidas no início da implementação.
 
 ## Documentação
 
