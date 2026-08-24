@@ -1,4 +1,5 @@
 import styles from "./page.module.css";
+import TripManager from "./components/TripManager";
 
 type HealthResponse = {
   status: string;
@@ -52,6 +53,7 @@ export default async function Home() {
               "Não foi possível conectar ao backend."}
           </p>
         </section>
+        <TripManager />
       </main>
     </div>
   );
