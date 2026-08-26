@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import styles from "./trip-manager.module.css";
 
 type Trip = {
   id: string;
@@ -116,14 +117,20 @@ export default function TripManager() {
   }
 
   return (
-    <section>
-      <div>
-        <h2>Crie uma viagem</h2>
+    <section className={styles.container}>
+      <div className={styles.panel}>
+        <h2 className={styles.heading}>
+          Crie uma viagem
+        </h2>
 
-        <form onSubmit={handleSubmit}>
-          <label>
+        <form
+          className={styles.form}
+          onSubmit={handleSubmit}
+        >
+          <label className={styles.field}>
             Destino
             <input
+              className={styles.input}
               type="text"
               name="destination"
               placeholder="Ex.: Lisboa"
@@ -131,18 +138,20 @@ export default function TripManager() {
             />
           </label>
 
-          <label>
+          <label className={styles.field}>
             Data inicial
             <input
+              className={styles.input}
               type="date"
               name="startDate"
               required
             />
           </label>
 
-          <label>
+          <label className={styles.field}>
             Data final
             <input
+              className={styles.input}
               type="date"
               name="endDate"
               required
@@ -150,6 +159,7 @@ export default function TripManager() {
           </label>
 
           <button
+            className={styles.button}
             type="submit"
             disabled={isSubmitting}
           >
@@ -160,8 +170,8 @@ export default function TripManager() {
         </form>
 
         {errors.length > 0 && (
-          <div role="alert">
-            <ul>
+          <div className={styles.error} role="alert">
+            <ul className={styles.errorList}>
               {errors.map((error, index) => (
                 <li key={`${error}-${index}`}>
                   {error}
@@ -172,19 +182,28 @@ export default function TripManager() {
         )}
       </div>
 
-      <div>
-        <h2>Viagens cadastradas</h2>
+      <div className={styles.panel}>
+        <h2 className={styles.heading}>
+          Viagens cadastradas
+        </h2>
 
         {isLoading ? (
-          <p>Carregando viagens...</p>
+          <p className={styles.empty}>
+            Carregando viagens...
+          </p>
         ) : trips.length === 0 ? (
-          <p>Nenhuma viagem cadastrada.</p>
+          <p className={styles.empty}>
+            Nenhuma viagem cadastrada.
+          </p>
         ) : (
-          <ul>
+          <ul className={styles.tripList}>
             {trips.map((trip) => (
-              <li key={trip.id}>
+              <li
+                className={styles.tripCard}
+                key={trip.id}
+              >
                 <h3>{trip.destination}</h3>
-                <p>
+                <p className={styles.tripDate}>
                   {formatDate(trip.startDate)}
                   {" até "}
                   {formatDate(trip.endDate)}
