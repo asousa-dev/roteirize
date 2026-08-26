@@ -6,10 +6,11 @@ type HealthResponse = {
   message: string;
 };
 
-const apiUrl = 
+const apiUrl =
   process.env.API_URL ?? "http://localhost:8080";
 
-async function getApiHealth(): Promise<HealthResponse | null> {
+async function getApiHealth():
+  Promise<HealthResponse | null> {
   try {
     const response = await fetch(
       `${apiUrl}/api/v1/health`,
@@ -22,7 +23,8 @@ async function getApiHealth(): Promise<HealthResponse | null> {
       return null;
     }
 
-    const data: HealthResponse = await response.json();
+    const data: HealthResponse =
+      await response.json();
 
     return data;
   } catch {
@@ -32,28 +34,99 @@ async function getApiHealth(): Promise<HealthResponse | null> {
 
 export default async function Home() {
   const health = await getApiHealth();
+  const isApiOnline = health?.status === "UP";
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <section className={styles.intro}>
-          <h1>Roteirize</h1>
+        <header className={styles.header}>
+          <div className={styles.brand}>
+            Roteirize
+          </div>
 
-          <p>
-            Construtor inteligente de roteiros de viagem.
-          </p>
+          <nav
+            className={styles.navigation}
+            aria-label="Navegação principal"
+          >
+            <a
+              className={`${styles.navItem} ${styles.navItemActive}`}
+              href="#viagens"
+            >
+              Minhas viagens
+            </a>
 
-          <p>
-            Status da API:{" "}
-            <strong>{health?.status ?? "OFFLINE"}</strong>
-          </p>
+            <span
+              className={`${styles.navItem} ${styles.navItemDisabled}`}
+              aria-disabled="true"
+            >
+              Roteiros
+            </span>
 
-          <p>
-            {health?.message ??
-              "Não foi possível conectar ao backend."}
-          </p>
+            <span
+              className={`${styles.navItem} ${styles.navItemDisabled}`}
+              aria-disabled="true"
+            >
+              Explorar
+            </span>
+          </nav>
+
+          <div
+            className={`${styles.apiStatus} ${
+              isApiOnline
+                ? styles.online
+                : styles.offline
+            }`}
+            title={
+              health?.message ??
+              "Não foi possível conectar ao backend."
+            }
+          >
+            <span className={styles.statusDot} />
+            API {isApiOnline ? "online" : "offline"}
+          </div>
+        </header>
+
+        <section className={styles.hero}>
+          <div className={styles.heroContent}>
+            <span className={styles.eyebrow}>
+              Planeje sem complicação
+            </span>
+
+            <h1>Para onde vamos agora?</h1>
+
+            <p className={styles.heroDescription}>
+              Crie suas viagens, organize as datas e
+              transforme cada destino em um roteiro
+              pensado para você.
+            </p>
+          </div>
+
+          <div
+            className={styles.heroVisual}
+            aria-hidden="true"
+          >
+            <span className={styles.visualLabel}>
+              Roteiro inteligente
+            </span>
+
+            <div className={styles.route}>
+              <span className={styles.routePoint} />
+              <span className={styles.routeLine} />
+              <span className={styles.plane}>✈</span>
+            </div>
+
+            <strong>Seu próximo destino</strong>
+            <p>começa com um bom planejamento.</p>
+          </div>
         </section>
-        <TripManager />
+
+        <section
+          id="viagens"
+          className={styles.workspace}
+          aria-label="Gerenciamento de viagens"
+        >
+          <TripManager />
+        </section>
       </main>
     </div>
   );
