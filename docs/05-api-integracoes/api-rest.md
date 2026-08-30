@@ -46,14 +46,26 @@ Esta seção define recursos e intenções. Os esquemas definitivos devem ser pu
 
 ## 18.3 Viagens
 
-| Método | Rota | Finalidade |
-|---|---|---|
-| GET | /trips | Listar viagens próprias |
-| POST | /trips | Criar viagem |
-| GET | /trips/{tripId} | Detalhar viagem |
-| PATCH | /trips/{tripId} | Alterar viagem |
-| DELETE | /trips/{tripId} | Excluir viagem |
-| GET | /trips/{tripId}/summary | Obter resumo |
+### Exemplo de criação
+
+~~~json
+{
+  "destination": {
+    "providerId": "identificador-do-provedor",
+    "displayName": "Roma, Itália",
+    "city": "Roma",
+    "state": "Lácio",
+    "country": "Itália",
+    "countryCode": "IT",
+    "latitude": 41.8933203,
+    "longitude": 12.4829321
+  },
+  "startDate": "2027-05-10",
+  "endDate": "2027-05-16"
+}
+~~~
+
+O destino deve corresponder a uma sugestão selecionada no autocomplete. O campo `providerId` é tratado como um identificador opaco, e `state` pode ser `null`.
 
 ### Exemplo de criação
 
@@ -80,24 +92,58 @@ Esta seção define recursos e intenções. Os esquemas definitivos devem ser pu
 | GET | /trips/{tripId}/days | Listar dias |
 | PATCH | /trips/{tripId}/days/{date} | Personalizar dia |
 
-## 18.5 Pesquisa de lugares
+## 18.5 Localizações e lugares
+
+### Autocomplete de cidades
+
+~~~http
+GET /api/v1/locations/cities?query={texto}
+~~~
+
+Busca cidades reais que podem ser selecionadas como destino de uma viagem.
+
+#### Regras
+
+- `query` é obrigatório;
+- deve possuir entre três e cem caracteres;
+- são retornadas até seis sugestões;
+- o frontend não acessa diretamente o provedor externo;
+- a chave do provedor permanece protegida no backend.
+
+#### Exemplo de resposta
+
+~~~json
+[
+  {
+    "providerId": "identificador-do-provedor",
+    "displayName": "Lisboa, Portugal",
+    "city": "Lisboa",
+    "state": null,
+    "country": "Portugal",
+    "countryCode": "PT",
+    "latitude": 38.7077507,
+    "longitude": -9.1365919
+  }
+]
+~~~
+
+O campo `providerId` é tratado como um identificador opaco fornecido pelo provedor. O campo `state` pode ser `null`.
+
+#### Respostas esperadas
+
+| Status | Situação |
+|---|---|
+| `200` | Busca realizada, mesmo quando não há sugestões |
+| `400` | Parâmetro de busca ausente ou inválido |
+| `503` | Provedor de localizações temporariamente indisponível |
+
+### Pesquisa e cadastro de atrações
 
 | Método | Rota | Finalidade |
 |---|---|---|
-| GET | /places/search | Pesquisar no provedor |
-| POST | /places/manual | Criar local manual |
-| GET | /places/{placeId} | Detalhar local |
-
-Parâmetros possíveis de pesquisa:
-
-- query;
-- city;
-- latitude;
-- longitude;
-- language;
-- limit.
-
-O frontend não deve chamar diretamente provedores que exijam chave secreta.
+| `GET` | `/api/v1/places/search` | Pesquisar atrações no provedor externo |
+| `POST` | `/api/v1/places/manual` | Cadastrar uma atração manualmente |
+| `GET` | `/api/v1/places/{placeId}` | Consultar os detalhes de uma atração |
 
 ## 18.6 Atrações da viagem
 

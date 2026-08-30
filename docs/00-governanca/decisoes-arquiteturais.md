@@ -66,4 +66,30 @@
 
 **Consequência:** colaboração será adicionada com modelo explícito de permissões.
 
+## ADR-009 — Geoapify para autocomplete de cidades
+
+**Status:** aceita.
+
+**Contexto:** o destino de uma viagem precisa representar uma cidade real. Um campo de texto livre permitiria valores inválidos e não forneceria coordenadas para mapas, rotas e cálculos de deslocamento.
+
+**Decisão:** utilizar a Address Autocomplete API da Geoapify como primeiro provedor de busca de cidades.
+
+A integração será realizada exclusivamente pelo backend e permanecerá protegida pela abstração definida na ADR-006. O restante da aplicação utilizará o contrato interno do Roteirize, sem depender dos modelos da Geoapify.
+
+**Motivos:**
+
+- permite restringir os resultados a cidades;
+- fornece nome, país, estado e coordenadas;
+- retorna um identificador para cada localização;
+- atende às necessidades iniciais de autocomplete e geocodificação;
+- pode ser substituída sem modificar o contrato público da API.
+
+**Consequências:**
+
+- a busca de cidades depende da disponibilidade de um serviço externo;
+- a chave deve ser fornecida pela variável `GEOAPIFY_API_KEY`;
+- erros do provedor devem ser convertidos em respostas padronizadas;
+- destinos selecionados passam a ser armazenados como dados estruturados;
+- uma troca futura de provedor exigirá apenas um novo adaptador e seu mapeamento.
+
 ---

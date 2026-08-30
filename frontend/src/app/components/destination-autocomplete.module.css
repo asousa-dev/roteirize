@@ -1,0 +1,73 @@
+.autocomplete {
+  position: relative;
+}
+
+.inputInvalid {
+  border-color: #ff9cab;
+}
+
+.inputInvalid:focus {
+  border-color: #ff9cab;
+  box-shadow: 0 0 0 3px rgba(255, 156, 171, 0.24);
+}
+
+.suggestions {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 14px 30px rgba(16, 24, 40, 0.18);
+  color: var(--text-primary);
+}
+
+.suggestion {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  border-bottom: 1px solid #eaecf0;
+  background: white;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestion:last-child {
+  border-bottom: 0;
+}
+
+.suggestion:hover,
+.suggestionActive {
+  background: #f2f4f7;
+}
+
+.suggestion strong {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.suggestion span {
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.status {
+  padding: 14px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.fieldMessage {
+  color: #ffd1d7;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
