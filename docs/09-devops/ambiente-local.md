@@ -26,27 +26,56 @@ As versões exatas serão fixadas no início da implementação e registradas no
 
 ### Backend
 
-~~~text
-DATABASE_URL=
-DATABASE_USERNAME=
-DATABASE_PASSWORD=
-APP_FRONTEND_ORIGIN=
-AUTH_ACCESS_TOKEN_SECRET=
-AUTH_REFRESH_TOKEN_SECRET=
-PLACE_PROVIDER=
-PLACE_PROVIDER_API_KEY=
-ROUTING_PROVIDER=
-ROUTING_PROVIDER_API_KEY=
+| Variável | Finalidade |
+|---|---|
+| `GEOAPIFY_API_KEY` | Autenticar as consultas de cidades na Geoapify |
+
+A chave deve ser definida no mesmo terminal usado para iniciar o backend.
+
+No PowerShell:
+
+~~~powershell
+$roteirizeGeoapifyKey = Read-Host "Chave da Geoapify" -AsSecureString
+
+$env:GEOAPIFY_API_KEY = [System.Net.NetworkCredential]::new(
+  "",
+  $roteirizeGeoapifyKey
+).Password
+
+Remove-Variable roteirizeGeoapifyKey
 ~~~
+
+Depois, no mesmo terminal:
+
+~~~powershell
+cd backend
+.\mvnw.cmd spring-boot:run
+~~~
+
+O arquivo `application.properties` referencia a variável sem armazenar seu valor:
+
+~~~properties
+integrations.geoapify.base-url=https://api.geoapify.com/v1/geocode
+integrations.geoapify.api-key=${GEOAPIFY_API_KEY:}
+~~~
+
+A chave real não deve ser escrita no `application.properties` nem em qualquer arquivo versionado.
 
 ### Frontend
 
-~~~text
-NEXT_PUBLIC_API_BASE_URL=
-NEXT_PUBLIC_MAP_STYLE_URL=
+O frontend utiliza a seguinte variável no arquivo `frontend/.env.local`:
+
+~~~properties
+API_URL=http://localhost:8080
 ~~~
 
-Somente variáveis realmente públicas podem usar prefixo público.
+`API_URL` é utilizada somente pelo servidor Next.js para acessar o backend. Como ela não possui o prefixo `NEXT_PUBLIC_`, seu valor não é exposto diretamente ao navegador.
+
+O arquivo versionado `frontend/.env.example` apresenta apenas o formato esperado:
+
+~~~properties
+API_URL=http://localhost:8080
+~~~
 
 ## 24.4 Arquivo de exemplo
 
