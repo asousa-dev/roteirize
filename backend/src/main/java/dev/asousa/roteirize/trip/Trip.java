@@ -3,17 +3,18 @@ package dev.asousa.roteirize.trip;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class Trip{
+public class Trip {
+
     private final UUID id;
-    private final String destination;
+    private final TripDestination destination;
     private final LocalDate startDate;
     private final LocalDate endDate;
 
     public Trip(
-        UUID id,
-        String destination,
-        LocalDate startDate,
-        LocalDate endDate
+            UUID id,
+            TripDestination destination,
+            LocalDate startDate,
+            LocalDate endDate
     ) {
         this.id = id;
         this.destination = destination;
@@ -21,23 +22,19 @@ public class Trip{
         this.endDate = endDate;
     }
 
-    public UUID getId(){
+    public UUID getId() {
         return id;
     }
 
-    public String getDestination(){
+    public TripDestination getDestination() {
         return destination;
     }
 
-    public LocalDate getStartDate(){
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public LocalDate getEndDate(){
+    public LocalDate getEndDate() {
         return endDate;
     }
-
-
-
-
 }

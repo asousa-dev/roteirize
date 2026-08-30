@@ -4,22 +4,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class TripService {
-    private final Map<UUID, Trip> trips = new ConcurrentHashMap<>();
 
-    public TripResponse create(CreateTripRequest request){
+    private final Map<UUID, Trip> trips =
+            new ConcurrentHashMap<>();
+
+    public TripResponse create(
+            CreateTripRequest request
+    ) {
         UUID id = UUID.randomUUID();
 
-        Trip trip = new Trip(id, request.destination(), request.startDate(), request.endDate());
+        Trip trip = new Trip(
+                id,
+                request.destination().toDomain(),
+                request.startDate(),
+                request.endDate()
+        );
+
         trips.put(id, trip);
 
         return TripResponse.from(trip);
     }
 
-    public List<TripResponse> findAll(){
-        return trips .values() .stream() .map(TripResponse::from) .toList();
+    public List<TripResponse> findAll() {
+        return trips.values()
+                .stream()
+                .map(TripResponse::from)
+                .toList();
     }
 }

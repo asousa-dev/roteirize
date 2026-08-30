@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import DestinationAutocomplete, {
+  type LocationSuggestion,
+} from "./DestinationAutocomplete";
 import styles from "./trip-manager.module.css";
 
 type Trip = {
   id: string;
-  destination: string;
+  destination: LocationSuggestion;
   startDate: string;
   endDate: string;
 };
@@ -22,7 +25,9 @@ async function getTrips(): Promise<Trip[]> {
   });
 
   if (!response.ok) {
-    throw new Error("Não foi possível carregar");
+    throw new Error(
+      "Não foi possível carregar as viagens."
+    );
   }
 
   return (await response.json()) as Trip[];
@@ -36,8 +41,21 @@ function formatDate(date: string): string {
 
 export default function TripManager() {
   const [trips, setTrips] = useState<Trip[]>([]);
-  const [errors, setErrors] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [errors, setErrors] = useState<string[]>(
+    []
+  );
+  const [
+    selectedDestination,
+    setSelectedDestination,
+  ] = useState<LocationSuggestion | null>(null);
+  const [
+    destinationValidationMessage,
+    setDestinationValidationMessage,
+  ] = useState<string | null>(null);
+  const [formResetKey, setFormResetKey] =
+    useState(0);
+  const [isLoading, setIsLoading] =
+    useState(true);
   const [isSubmitting, setIsSubmitting] =
     useState(false);
 
@@ -58,18 +76,35 @@ export default function TripManager() {
     void loadTrips();
   }, []);
 
+  function handleDestinationSelection(
+    location: LocationSuggestion | null
+  ) {
+    setSelectedDestination(location);
+
+    if (location) {
+      setDestinationValidationMessage(null);
+    }
+  }
+
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>
   ) {
     event.preventDefault();
+    setErrors([]);
+
+    if (!selectedDestination) {
+      setDestinationValidationMessage(
+        "Selecione uma cidade na lista de sugestões."
+      );
+
+      return;
+    }
 
     const form = event.currentTarget;
     const formData = new FormData(form);
 
     const trip = {
-      destination: String(
-        formData.get("destination") ?? ""
-      ),
+      destination: selectedDestination,
       startDate: String(
         formData.get("startDate") ?? ""
       ),
@@ -78,7 +113,7 @@ export default function TripManager() {
       ),
     };
 
-    setErrors([]);
+    setDestinationValidationMessage(null);
     setIsSubmitting(true);
 
     try {
@@ -90,20 +125,28 @@ export default function TripManager() {
         body: JSON.stringify(trip),
       });
 
-      const data = (await response.json()) as ApiError;
+      const data =
+        (await response.json()) as ApiError;
 
       if (!response.ok) {
-        setErrors(
-          data.errors ?? [
-            data.message ??
-              "Não foi possível criar a viagem.",
-          ]
-        );
+        const responseErrors =
+          data.errors && data.errors.length > 0
+            ? data.errors
+            : [
+                data.message ??
+                  "Não foi possível criar a viagem.",
+              ];
 
+        setErrors(responseErrors);
         return;
       }
 
       form.reset();
+      setSelectedDestination(null);
+      setDestinationValidationMessage(null);
+      setFormResetKey(
+        (current) => current + 1
+      );
 
       const updatedTrips = await getTrips();
       setTrips(updatedTrips);
@@ -127,16 +170,16 @@ export default function TripManager() {
           className={styles.form}
           onSubmit={handleSubmit}
         >
-          <label className={styles.field}>
-            Destino
-            <input
-              className={styles.input}
-              type="text"
-              name="destination"
-              placeholder="Ex.: Lisboa"
-              required
-            />
-          </label>
+          <DestinationAutocomplete
+            key={formResetKey}
+            onSelectionChange={
+              handleDestinationSelection
+            }
+            validationMessage={
+              destinationValidationMessage ??
+              undefined
+            }
+          />
 
           <label className={styles.field}>
             Data inicial
@@ -170,7 +213,10 @@ export default function TripManager() {
         </form>
 
         {errors.length > 0 && (
-          <div className={styles.error} role="alert">
+          <div
+            className={styles.error}
+            role="alert"
+          >
             <ul className={styles.errorList}>
               {errors.map((error, index) => (
                 <li key={`${error}-${index}`}>
@@ -202,7 +248,10 @@ export default function TripManager() {
                 className={styles.tripCard}
                 key={trip.id}
               >
-                <h3>{trip.destination}</h3>
+                <h3>
+                  {trip.destination.displayName}
+                </h3>
+
                 <p className={styles.tripDate}>
                   {formatDate(trip.startDate)}
                   {" até "}
